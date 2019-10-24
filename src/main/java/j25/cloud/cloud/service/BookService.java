@@ -5,12 +5,12 @@ import j25.cloud.cloud.model.Book;
 import j25.cloud.cloud.model.dto.CreateBookRequest;
 import j25.cloud.cloud.model.dto.UpdateBookRequest;
 import j25.cloud.cloud.repository.BookRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,8 +55,17 @@ public class BookService {
         throw new EntityNotFoundException("book, id: " + bookId);
     }
 
-    public List<Book> getByTitleAndOrAuthor(String title, String author) {
-//        return bookRepository.findAllByAuthorLikeAndTitleLike(title, author);
-        return bookRepository.findByTitleOrAndAuthor(title, author);
+//    szukanie po autorze i/lub tytule
+    public List<Book> getByAuthorOrTitle(String author, String title) {
+        if (author != null && !author.isEmpty() && title != null && !title.isEmpty()) {
+            return bookRepository.findByAuthorContainingOrTitleContaining(author, title);
+        }
+        if (author != null && !author.isEmpty()) {
+            return bookRepository.findByAuthorContaining(author);
+        }
+        if (title != null && !title.isEmpty()) {
+            return bookRepository.findByTitleLike(title);
+        }
+        return new ArrayList<>();
     }
 }

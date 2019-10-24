@@ -16,6 +16,7 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+//    można to zrobić bez dto -> w repo Pawła
     @PutMapping
     public Long putBook(@RequestBody CreateBookRequest bookRequest) {
 
@@ -34,8 +35,8 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public List<Book> getByTitleAndAuthor(@RequestParam(name = "title", required = false) String title,
-                                          @RequestParam(name = "author", required = false) String author) {
-        return bookService.getByTitleAndOrAuthor(title, author);
+    public List<Book> getByTitleAndAuthor(@RequestParam(name = "author", required = false) String author,
+                                          @RequestParam(name = "title", required = false) String title) {
+        return bookService.getByAuthorOrTitle(author, title);
     }
 }
